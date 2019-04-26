@@ -4,34 +4,28 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import com.example.testdiegoandroid.Repositories.DeviceDataRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    lateinit var deviceDataRepository : DeviceDataRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        var sharePreferences = prefs.edit()
+        deviceDataRepository = DeviceDataRepository(this)
 
-        sharePreferences.putInt("orderStatus", 0)
-
-        fun setOrderStatus(number: Int){
-            sharePreferences.putInt("orderStatus", number)
-            sharePreferences.commit()
-        }
-        fun getOrderStatus(): Int = run {
-            prefs.getInt("orderStatus", 0)
-        }
+        textView.text = deviceDataRepository.getOrderStatus().toString()
 
         getBtn.setOnClickListener {
-            setOrderStatus((editText.text).toString().toInt())
-            textView.text = getOrderStatus().toString()
+            deviceDataRepository.setOrderStatus((editText.text).toString().toInt())
+            textView.text = deviceDataRepository.getOrderStatus().toString()
         }
         restartBtn.setOnClickListener {
-            setOrderStatus(0)
-            textView.text = getOrderStatus().toString()
+            deviceDataRepository.setOrderStatus(0)
+            textView.text = deviceDataRepository.getOrderStatus().toString()
         }
     }
 
